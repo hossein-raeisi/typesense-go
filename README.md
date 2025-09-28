@@ -1,9 +1,9 @@
 # typesense-go
 
 [![Build Status](https://cloud.drone.io/api/badges/typesense/typesense-go/status.svg)](https://cloud.drone.io/typesense/typesense-go)
-[![GoReportCard Status](https://goreportcard.com/badge/github.com/typesense/typesense-go/v3)](https://goreportcard.com/report/github.com/typesense/typesense-go/v3)
-[![Go Reference](https://pkg.go.dev/badge/github.com/typesense/typesense-go/v3.svg)](https://pkg.go.dev/github.com/typesense/typesense-go/v3)
-[![GitHub release](https://img.shields.io/github/v/release/typesense/typesense-go)](https://github.com/typesense/typesense-go/releases/latest)
+[![GoReportCard Status](https://goreportcard.com/badge/github.com/hossein-raeisi/typesense-go/v3)](https://goreportcard.com/report/github.com/hossein-raeisi/typesense-go/v3)
+[![Go Reference](https://pkg.go.dev/badge/github.com/hossein-raeisi/typesense-go/v3.svg)](https://pkg.go.dev/github.com/hossein-raeisi/typesense-go/v3)
+[![GitHub release](https://img.shields.io/github/v/release/typesense/typesense-go)](https://github.com/hossein-raeisi/typesense-go/releases/latest)
 [![Gitter](https://badges.gitter.im/typesense-go/community.svg)](https://gitter.im/typesense-go/community)
 
 Go client for the Typesense API: https://github.com/typesense/typesense
@@ -11,7 +11,7 @@ Go client for the Typesense API: https://github.com/typesense/typesense
 ## Installation
 
 ```
-go get github.com/typesense/typesense-go/v3/typesense
+go get github.com/hossein-raeisi/typesense-go/v3/typesense
 ```
 
 ## Usage
@@ -19,7 +19,7 @@ go get github.com/typesense/typesense-go/v3/typesense
 Import the the package into your code :
 
 ```go
-import "github.com/typesense/typesense-go/v3/typesense"
+import "github.com/hossein-raeisi/typesense-go/v3/typesense"
 ```
 
 Create new client:
@@ -60,7 +60,7 @@ client := typesense.NewClient(
 	)
 ```
 
-You can also find some examples in [integration tests](https://github.com/typesense/typesense-go/tree/master/typesense/test).
+You can also find some examples in [integration tests](https://github.com/hossein-raeisi/typesense-go/tree/master/typesense/test).
 
 ### Create a collection
 

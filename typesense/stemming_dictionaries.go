@@ -7,7 +7,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/typesense/typesense-go/v3/typesense/api"
+	"github.com/hossein-raeisi/typesense-go/v3/typesense/api"
 )
 
 type StemmingDictionariesInterface interface {

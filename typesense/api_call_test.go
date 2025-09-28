@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/hossein-raeisi/typesense-go/v3/typesense/api"
 	"github.com/stretchr/testify/assert"
-	"github.com/typesense/typesense-go/v3/typesense/api"
 )
 
 type serverHandler func(http.ResponseWriter, *http.Request)

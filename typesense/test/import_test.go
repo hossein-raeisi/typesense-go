@@ -9,9 +9,9 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/hossein-raeisi/typesense-go/v3/typesense/api"
+	"github.com/hossein-raeisi/typesense-go/v3/typesense/api/pointer"
 	"github.com/stretchr/testify/require"
-	"github.com/typesense/typesense-go/v3/typesense/api"
-	"github.com/typesense/typesense-go/v3/typesense/api/pointer"
 )
 
 func TestDocumentsImport(t *testing.T) {

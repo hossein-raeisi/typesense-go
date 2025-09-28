@@ -11,10 +11,10 @@ import (
 	"log"
 	"time"
 
+	"github.com/hossein-raeisi/typesense-go/v3/typesense"
+	"github.com/hossein-raeisi/typesense-go/v3/typesense/api"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
-	"github.com/typesense/typesense-go/v3/typesense"
-	"github.com/typesense/typesense-go/v3/typesense/api"
 )
 
 var typesenseC testcontainers.Container

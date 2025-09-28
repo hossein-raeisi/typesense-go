@@ -3,7 +3,7 @@ package typesense
 import (
 	"context"
 
-	"github.com/typesense/typesense-go/v3/typesense/api"
+	"github.com/hossein-raeisi/typesense-go/v3/typesense/api"
 )
 
 // ConversationModelsInterface is a type for ConversationModels API operations

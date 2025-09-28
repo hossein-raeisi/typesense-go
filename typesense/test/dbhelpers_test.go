@@ -11,9 +11,9 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/hossein-raeisi/typesense-go/v3/typesense/api"
+	"github.com/hossein-raeisi/typesense-go/v3/typesense/api/pointer"
 	"github.com/stretchr/testify/require"
-	"github.com/typesense/typesense-go/v3/typesense/api"
-	"github.com/typesense/typesense-go/v3/typesense/api/pointer"
 )
 
 func newUUIDName(namePrefix string) string {
@@ -445,54 +445,54 @@ func retrieveDocuments(t *testing.T, collectionName string, docIDs ...string) []
 
 func newNLSearchModelCreateSchema() *api.NLSearchModelCreateSchema {
 	apiKey := os.Getenv("NL_SEARCH_MODEL_API_KEY")
-	
+
 	return &api.NLSearchModelCreateSchema{
-		ModelName:    pointer.String("openai/gpt-3.5-turbo"),
-		ApiKey:       pointer.String(apiKey),
-		MaxBytes:     pointer.Int(1000),
-		Temperature:  pointer.Float32(0.7),
-		SystemPrompt: pointer.String("You are a helpful assistant."),
-		TopP:         pointer.Float32(0.9),
-		TopK:         pointer.Int(40),
+		ModelName:     pointer.String("openai/gpt-3.5-turbo"),
+		ApiKey:        pointer.String(apiKey),
+		MaxBytes:      pointer.Int(1000),
+		Temperature:   pointer.Float32(0.7),
+		SystemPrompt:  pointer.String("You are a helpful assistant."),
+		TopP:          pointer.Float32(0.9),
+		TopK:          pointer.Int(40),
 		StopSequences: &[]string{"END", "STOP"},
-		ApiVersion:   pointer.String("v1"),
+		ApiVersion:    pointer.String("v1"),
 	}
 }
 
 func newNLSearchModelSchema(modelID string) *api.NLSearchModelSchema {
 	apiKey := os.Getenv("NL_SEARCH_MODEL_API_KEY")
-	
+
 	return &api.NLSearchModelSchema{
-		Id:           modelID,
-		ModelName:    pointer.String("openai/gpt-3.5-turbo"),
-		ApiKey:       pointer.String(apiKey),
-		MaxBytes:     pointer.Int(1000),
-		Temperature:  pointer.Float32(0.7),
-		SystemPrompt: pointer.String("You are a helpful assistant."),
-		TopP:         pointer.Float32(0.9),
-		TopK:         pointer.Int(40),
+		Id:            modelID,
+		ModelName:     pointer.String("openai/gpt-3.5-turbo"),
+		ApiKey:        pointer.String(apiKey),
+		MaxBytes:      pointer.Int(1000),
+		Temperature:   pointer.Float32(0.7),
+		SystemPrompt:  pointer.String("You are a helpful assistant."),
+		TopP:          pointer.Float32(0.9),
+		TopK:          pointer.Int(40),
 		StopSequences: &[]string{"END", "STOP"},
-		ApiVersion:   pointer.String("v1"),
+		ApiVersion:    pointer.String("v1"),
 	}
 }
 
 func newNLSearchModelUpdateSchema() *api.NLSearchModelUpdateSchema {
 	apiKey := os.Getenv("NL_SEARCH_MODEL_API_KEY")
-	
+
 	return &api.NLSearchModelUpdateSchema{
-		ModelName:    pointer.String("openai/gpt-4"),
-		ApiKey:       pointer.String(apiKey),
-		MaxBytes:     pointer.Int(2000),
-		Temperature:  pointer.Float32(0.5),
-		SystemPrompt: pointer.String("You are an expert assistant."),
-		TopP:         pointer.Float32(0.8),
-		TopK:         pointer.Int(50),
+		ModelName:     pointer.String("openai/gpt-4"),
+		ApiKey:        pointer.String(apiKey),
+		MaxBytes:      pointer.Int(2000),
+		Temperature:   pointer.Float32(0.5),
+		SystemPrompt:  pointer.String("You are an expert assistant."),
+		TopP:          pointer.Float32(0.8),
+		TopK:          pointer.Int(50),
 		StopSequences: &[]string{"END", "STOP", "QUIT"},
-		ApiVersion:   pointer.String("v1"),
+		ApiVersion:    pointer.String("v1"),
 	}
 }
 
-func shouldSkipNLSearchModelTests(t *testing.T)  {
+func shouldSkipNLSearchModelTests(t *testing.T) {
 	if os.Getenv("NL_SEARCH_MODEL_API_KEY") == "" {
 		t.Skip("Skipping NL search model test: NL_SEARCH_MODEL_API_KEY not set")
 	}

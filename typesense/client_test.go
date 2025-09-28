@@ -5,10 +5,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/hossein-raeisi/typesense-go/v3/typesense/api"
+	"github.com/hossein-raeisi/typesense-go/v3/typesense/api/circuit"
 	"github.com/sony/gobreaker"
 	"github.com/stretchr/testify/assert"
-	"github.com/typesense/typesense-go/v3/typesense/api"
-	"github.com/typesense/typesense-go/v3/typesense/api/circuit"
 )
 
 func TestHttpError(t *testing.T) {
