@@ -13,18 +13,20 @@ const (
 	Api_key_headerScopes = "api_key_header.Scopes"
 )
 
-// Defines values for AnalyticsRuleSchemaType.
+// Defines values for AnalyticsRuleType.
 const (
-	AnalyticsRuleSchemaTypeCounter        AnalyticsRuleSchemaType = "counter"
-	AnalyticsRuleSchemaTypeNohitsQueries  AnalyticsRuleSchemaType = "nohits_queries"
-	AnalyticsRuleSchemaTypePopularQueries AnalyticsRuleSchemaType = "popular_queries"
+	AnalyticsRuleTypeCounter        AnalyticsRuleType = "counter"
+	AnalyticsRuleTypeLog            AnalyticsRuleType = "log"
+	AnalyticsRuleTypeNohitsQueries  AnalyticsRuleType = "nohits_queries"
+	AnalyticsRuleTypePopularQueries AnalyticsRuleType = "popular_queries"
 )
 
-// Defines values for AnalyticsRuleUpsertSchemaType.
+// Defines values for AnalyticsRuleCreateType.
 const (
-	AnalyticsRuleUpsertSchemaTypeCounter        AnalyticsRuleUpsertSchemaType = "counter"
-	AnalyticsRuleUpsertSchemaTypeNohitsQueries  AnalyticsRuleUpsertSchemaType = "nohits_queries"
-	AnalyticsRuleUpsertSchemaTypePopularQueries AnalyticsRuleUpsertSchemaType = "popular_queries"
+	AnalyticsRuleCreateTypeCounter        AnalyticsRuleCreateType = "counter"
+	AnalyticsRuleCreateTypeLog            AnalyticsRuleCreateType = "log"
+	AnalyticsRuleCreateTypeNohitsQueries  AnalyticsRuleCreateType = "nohits_queries"
+	AnalyticsRuleCreateTypePopularQueries AnalyticsRuleCreateType = "popular_queries"
 )
 
 // Defines values for DirtyValues.
@@ -73,69 +75,109 @@ type APIStatsResponse struct {
 	WriteRequestsPerSecond      *float64            `json:"write_requests_per_second,omitempty"`
 }
 
+// AnalyticsEvent defines model for AnalyticsEvent.
+type AnalyticsEvent struct {
+	// Data Event payload
+	Data struct {
+		AnalyticsTag *string   `json:"analytics_tag,omitempty"`
+		DocId        *string   `json:"doc_id,omitempty"`
+		DocIds       *[]string `json:"doc_ids,omitempty"`
+		Q            *string   `json:"q,omitempty"`
+		UserId       *string   `json:"user_id,omitempty"`
+	} `json:"data"`
+
+	// EventType Type of event (e.g., click, conversion, query, visit)
+	EventType string `json:"event_type"`
+
+	// Name Name of the analytics rule this event corresponds to
+	Name string `json:"name"`
+}
+
 // AnalyticsEventCreateResponse defines model for AnalyticsEventCreateResponse.
 type AnalyticsEventCreateResponse struct {
 	Ok bool `json:"ok"`
 }
 
-// AnalyticsEventCreateSchema defines model for AnalyticsEventCreateSchema.
-type AnalyticsEventCreateSchema struct {
-	Data map[string]interface{} `json:"data"`
-	Name string                 `json:"name"`
-	Type string                 `json:"type"`
+// AnalyticsEventsResponse defines model for AnalyticsEventsResponse.
+type AnalyticsEventsResponse struct {
+	Events []struct {
+		Collection *string   `json:"collection,omitempty"`
+		DocId      *string   `json:"doc_id,omitempty"`
+		DocIds     *[]string `json:"doc_ids,omitempty"`
+		EventType  *string   `json:"event_type,omitempty"`
+		Name       *string   `json:"name,omitempty"`
+		Query      *string   `json:"query,omitempty"`
+		Timestamp  *int64    `json:"timestamp,omitempty"`
+		UserId     *string   `json:"user_id,omitempty"`
+	} `json:"events"`
 }
 
-// AnalyticsRuleDeleteResponse defines model for AnalyticsRuleDeleteResponse.
-type AnalyticsRuleDeleteResponse struct {
-	Name string `json:"name"`
+// AnalyticsRule defines model for AnalyticsRule.
+type AnalyticsRule struct {
+	Collection string `json:"collection"`
+	EventType  string `json:"event_type"`
+	Name       string `json:"name"`
+	Params     *struct {
+		CaptureSearchRequests *bool     `json:"capture_search_requests,omitempty"`
+		CounterField          *string   `json:"counter_field,omitempty"`
+		DestinationCollection *string   `json:"destination_collection,omitempty"`
+		ExpandQuery           *bool     `json:"expand_query,omitempty"`
+		Limit                 *int      `json:"limit,omitempty"`
+		MetaFields            *[]string `json:"meta_fields,omitempty"`
+		Weight                *int      `json:"weight,omitempty"`
+	} `json:"params,omitempty"`
+	RuleTag *string           `json:"rule_tag,omitempty"`
+	Type    AnalyticsRuleType `json:"type"`
 }
 
-// AnalyticsRuleParameters defines model for AnalyticsRuleParameters.
-type AnalyticsRuleParameters struct {
-	Destination AnalyticsRuleParametersDestination `json:"destination"`
-	ExpandQuery *bool                              `json:"expand_query,omitempty"`
-	Limit       *int                               `json:"limit,omitempty"`
-	Source      AnalyticsRuleParametersSource      `json:"source"`
+// AnalyticsRuleType defines model for AnalyticsRule.Type.
+type AnalyticsRuleType string
+
+// AnalyticsRuleCreate defines model for AnalyticsRuleCreate.
+type AnalyticsRuleCreate struct {
+	Collection string `json:"collection"`
+	EventType  string `json:"event_type"`
+	Name       string `json:"name"`
+	Params     *struct {
+		CaptureSearchRequests *bool     `json:"capture_search_requests,omitempty"`
+		CounterField          *string   `json:"counter_field,omitempty"`
+		DestinationCollection *string   `json:"destination_collection,omitempty"`
+		ExpandQuery           *bool     `json:"expand_query,omitempty"`
+		Limit                 *int      `json:"limit,omitempty"`
+		MetaFields            *[]string `json:"meta_fields,omitempty"`
+		Weight                *int      `json:"weight,omitempty"`
+	} `json:"params,omitempty"`
+	RuleTag *string                 `json:"rule_tag,omitempty"`
+	Type    AnalyticsRuleCreateType `json:"type"`
 }
 
-// AnalyticsRuleParametersDestination defines model for AnalyticsRuleParametersDestination.
-type AnalyticsRuleParametersDestination struct {
-	Collection   string  `json:"collection"`
-	CounterField *string `json:"counter_field,omitempty"`
+// AnalyticsRuleCreateType defines model for AnalyticsRuleCreate.Type.
+type AnalyticsRuleCreateType string
+
+// AnalyticsRuleUpdate Fields allowed to update on an analytics rule
+type AnalyticsRuleUpdate struct {
+	Name   *string `json:"name,omitempty"`
+	Params *struct {
+		CaptureSearchRequests *bool     `json:"capture_search_requests,omitempty"`
+		CounterField          *string   `json:"counter_field,omitempty"`
+		DestinationCollection *string   `json:"destination_collection,omitempty"`
+		ExpandQuery           *bool     `json:"expand_query,omitempty"`
+		Limit                 *int      `json:"limit,omitempty"`
+		MetaFields            *[]string `json:"meta_fields,omitempty"`
+		Weight                *int      `json:"weight,omitempty"`
+	} `json:"params,omitempty"`
+	RuleTag *string `json:"rule_tag,omitempty"`
 }
 
-// AnalyticsRuleParametersSource defines model for AnalyticsRuleParametersSource.
-type AnalyticsRuleParametersSource struct {
-	Collections []string `json:"collections"`
-	Events      *[]struct {
-		Name   string  `json:"name"`
-		Type   string  `json:"type"`
-		Weight float32 `json:"weight"`
-	} `json:"events,omitempty"`
-}
-
-// AnalyticsRuleSchema defines model for AnalyticsRuleSchema.
-type AnalyticsRuleSchema struct {
-	Name   string                  `json:"name"`
-	Params AnalyticsRuleParameters `json:"params"`
-	Type   AnalyticsRuleSchemaType `json:"type"`
-}
-
-// AnalyticsRuleSchemaType defines model for AnalyticsRuleSchema.Type.
-type AnalyticsRuleSchemaType string
-
-// AnalyticsRuleUpsertSchema defines model for AnalyticsRuleUpsertSchema.
-type AnalyticsRuleUpsertSchema struct {
-	Params AnalyticsRuleParameters       `json:"params"`
-	Type   AnalyticsRuleUpsertSchemaType `json:"type"`
-}
-
-// AnalyticsRuleUpsertSchemaType defines model for AnalyticsRuleUpsertSchema.Type.
-type AnalyticsRuleUpsertSchemaType string
-
-// AnalyticsRulesRetrieveSchema defines model for AnalyticsRulesRetrieveSchema.
-type AnalyticsRulesRetrieveSchema struct {
-	Rules *[]*AnalyticsRuleSchema `json:"rules,omitempty"`
+// AnalyticsStatus defines model for AnalyticsStatus.
+type AnalyticsStatus struct {
+	DocCounterEvents     *int `json:"doc_counter_events,omitempty"`
+	DocLogEvents         *int `json:"doc_log_events,omitempty"`
+	LogPrefixQueries     *int `json:"log_prefix_queries,omitempty"`
+	NohitsPrefixQueries  *int `json:"nohits_prefix_queries,omitempty"`
+	PopularPrefixQueries *int `json:"popular_prefix_queries,omitempty"`
+	QueryCounterEvents   *int `json:"query_counter_events,omitempty"`
+	QueryLogEvents       *int `json:"query_log_events,omitempty"`
 }
 
 // ApiKey defines model for ApiKey.
@@ -220,6 +262,9 @@ type CollectionResponse struct {
 	// SymbolsToIndex List of symbols or special characters to be indexed.
 	SymbolsToIndex *[]string `json:"symbols_to_index,omitempty"`
 
+	// SynonymSets List of synonym set names to associate with this collection
+	SynonymSets *[]string `json:"synonym_sets,omitempty"`
+
 	// TokenSeparators List of symbols or special characters to be used for splitting the text into individual words in addition to space and new-line characters.
 	TokenSeparators *[]string `json:"token_separators,omitempty"`
 
@@ -247,6 +292,9 @@ type CollectionSchema struct {
 	// SymbolsToIndex List of symbols or special characters to be indexed.
 	SymbolsToIndex *[]string `json:"symbols_to_index,omitempty"`
 
+	// SynonymSets List of synonym set names to associate with this collection
+	SynonymSets *[]string `json:"synonym_sets,omitempty"`
+
 	// TokenSeparators List of symbols or special characters to be used for splitting the text into individual words in addition to space and new-line characters.
 	TokenSeparators *[]string `json:"token_separators,omitempty"`
 
@@ -261,6 +309,9 @@ type CollectionUpdateSchema struct {
 
 	// Metadata Optional details about the collection, e.g., when it was created, who created it etc.
 	Metadata *map[string]interface{} `json:"metadata,omitempty"`
+
+	// SynonymSets List of synonym set names to associate with this collection
+	SynonymSets *[]string `json:"synonym_sets,omitempty"`
 }
 
 // ConversationModelCreateSchema defines model for ConversationModelCreateSchema.
@@ -356,7 +407,7 @@ type ConversationModelUpdateSchema struct {
 // DirtyValues defines model for DirtyValues.
 type DirtyValues string
 
-// DropTokensMode Dictates the direction in which the words in the query must be dropped when the original words in the query do not appear in any document. Values: right_to_left (default), left_to_right, both_sides:3 A note on both_sides:3 - for queries upto 3 tokens (words) in length, this mode will drop tokens from both sides and exhaustively rank all matching results. If query length is greater than 3 words, Typesense will just fallback to default behavior of right_to_left
+// DropTokensMode Dictates the direction in which the words in the query must be dropped when the original words in the query do not appear in any document. Values: right_to_left (default), left_to_right, both_sides:3 A note on both_sides:3 - for queries up to 3 tokens (words) in length, this mode will drop tokens from both sides and exhaustively rank all matching results. If query length is greater than 3 words, Typesense will just fallback to default behavior of right_to_left
 type DropTokensMode string
 
 // FacetCounts defines model for FacetCounts.
@@ -455,11 +506,14 @@ type MultiSearchCollectionParameters struct {
 	// ConversationModelId The Id of Conversation Model to be used.
 	ConversationModelId *string `json:"conversation_model_id,omitempty"`
 
-	// DropTokensMode Dictates the direction in which the words in the query must be dropped when the original words in the query do not appear in any document. Values: right_to_left (default), left_to_right, both_sides:3 A note on both_sides:3 - for queries upto 3 tokens (words) in length, this mode will drop tokens from both sides and exhaustively rank all matching results. If query length is greater than 3 words, Typesense will just fallback to default behavior of right_to_left
+	// DropTokensMode Dictates the direction in which the words in the query must be dropped when the original words in the query do not appear in any document. Values: right_to_left (default), left_to_right, both_sides:3 A note on both_sides:3 - for queries up to 3 tokens (words) in length, this mode will drop tokens from both sides and exhaustively rank all matching results. If query length is greater than 3 words, Typesense will just fallback to default behavior of right_to_left
 	DropTokensMode *DropTokensMode `json:"drop_tokens_mode,omitempty"`
 
 	// DropTokensThreshold If the number of results found for a specific query is less than this number, Typesense will attempt to drop the tokens in the query until enough results are found. Tokens that have the least individual hits are dropped first. Set to 0 to disable. Default: 10
 	DropTokensThreshold *int `json:"drop_tokens_threshold,omitempty"`
+
+	// EnableAnalytics Flag for enabling/disabling analytics aggregation for specific search queries (for e.g. those originating from a test script).
+	EnableAnalytics *bool `json:"enable_analytics,omitempty"`
 
 	// EnableOverrides If you have some overrides defined but want to disable all of them during query time, you can do that by setting this parameter to false
 	EnableOverrides *bool `json:"enable_overrides,omitempty"`
@@ -656,11 +710,14 @@ type MultiSearchParameters struct {
 	// ConversationModelId The Id of Conversation Model to be used.
 	ConversationModelId *string `json:"conversation_model_id,omitempty"`
 
-	// DropTokensMode Dictates the direction in which the words in the query must be dropped when the original words in the query do not appear in any document. Values: right_to_left (default), left_to_right, both_sides:3 A note on both_sides:3 - for queries upto 3 tokens (words) in length, this mode will drop tokens from both sides and exhaustively rank all matching results. If query length is greater than 3 words, Typesense will just fallback to default behavior of right_to_left
+	// DropTokensMode Dictates the direction in which the words in the query must be dropped when the original words in the query do not appear in any document. Values: right_to_left (default), left_to_right, both_sides:3 A note on both_sides:3 - for queries up to 3 tokens (words) in length, this mode will drop tokens from both sides and exhaustively rank all matching results. If query length is greater than 3 words, Typesense will just fallback to default behavior of right_to_left
 	DropTokensMode *DropTokensMode `json:"drop_tokens_mode,omitempty"`
 
 	// DropTokensThreshold If the number of results found for a specific query is less than this number, Typesense will attempt to drop the tokens in the query until enough results are found. Tokens that have the least individual hits are dropped first. Set to 0 to disable. Default: 10
 	DropTokensThreshold *int `json:"drop_tokens_threshold,omitempty"`
+
+	// EnableAnalytics Flag for enabling/disabling analytics aggregation for specific search queries (for e.g. those originating from a test script).
+	EnableAnalytics *bool `json:"enable_analytics,omitempty"`
 
 	// EnableOverrides If you have some overrides defined but want to disable all of them during query time, you can do that by setting this parameter to false
 	EnableOverrides *bool `json:"enable_overrides,omitempty"`
@@ -860,6 +917,9 @@ type MultiSearchResultItem struct {
 
 	// Hits The documents that matched the search query
 	Hits *[]SearchResultHit `json:"hits,omitempty"`
+
+	// Metadata Custom JSON object that can be returned in the search response
+	Metadata *map[string]interface{} `json:"metadata,omitempty"`
 
 	// OutOf The total number of documents in the collection
 	OutOf *int `json:"out_of,omitempty"`
@@ -1278,11 +1338,14 @@ type SearchParameters struct {
 	// ConversationModelId The Id of Conversation Model to be used.
 	ConversationModelId *string `json:"conversation_model_id,omitempty"`
 
-	// DropTokensMode Dictates the direction in which the words in the query must be dropped when the original words in the query do not appear in any document. Values: right_to_left (default), left_to_right, both_sides:3 A note on both_sides:3 - for queries upto 3 tokens (words) in length, this mode will drop tokens from both sides and exhaustively rank all matching results. If query length is greater than 3 words, Typesense will just fallback to default behavior of right_to_left
+	// DropTokensMode Dictates the direction in which the words in the query must be dropped when the original words in the query do not appear in any document. Values: right_to_left (default), left_to_right, both_sides:3 A note on both_sides:3 - for queries up to 3 tokens (words) in length, this mode will drop tokens from both sides and exhaustively rank all matching results. If query length is greater than 3 words, Typesense will just fallback to default behavior of right_to_left
 	DropTokensMode *DropTokensMode `json:"drop_tokens_mode,omitempty"`
 
 	// DropTokensThreshold If the number of results found for a specific query is less than this number, Typesense will attempt to drop the tokens in the query until enough results are found. Tokens that have the least individual hits are dropped first. Set to 0 to disable. Default: 10
 	DropTokensThreshold *int `json:"drop_tokens_threshold,omitempty"`
+
+	// EnableAnalytics Flag for enabling/disabling analytics aggregation for specific search queries (for e.g. those originating from a test script).
+	EnableAnalytics *bool `json:"enable_analytics,omitempty"`
 
 	// EnableHighlightV1 Flag for enabling/disabling the deprecated, old highlight structure in the response. Default: true
 	EnableHighlightV1 *bool `json:"enable_highlight_v1,omitempty"`
@@ -1317,7 +1380,7 @@ type SearchParameters struct {
 	// FacetStrategy Choose the underlying faceting strategy used. Comma separated string of allows values: exhaustive, top_values or automatic (default).
 	FacetStrategy *string `json:"facet_strategy,omitempty"`
 
-	// FilterBy Filter conditions for refining youropen api validator search results. Separate multiple conditions with &&.
+	// FilterBy Filter conditions for refining your open api validator search results. Separate multiple conditions with &&.
 	FilterBy *string `json:"filter_by,omitempty"`
 
 	// FilterCuratedHits Whether the filter_by condition of the search query should be applicable to curated results (override definitions, pinned hits, hidden hits, etc.). Default: false
@@ -1461,6 +1524,9 @@ type SearchParameters struct {
 	// SynonymPrefix Allow synonym resolution on word prefixes in the query. Default: false
 	SynonymPrefix *bool `json:"synonym_prefix,omitempty"`
 
+	// SynonymSets List of synonym set names to associate with this search query
+	SynonymSets *string `json:"synonym_sets,omitempty"`
+
 	// TextMatchType In a multi-field matching context, this parameter determines how the representative text match score of a record is calculated. Possible values are max_score (default) or max_weight.
 	TextMatchType *string `json:"text_match_type,omitempty"`
 
@@ -1499,6 +1565,9 @@ type SearchResult struct {
 
 	// Hits The documents that matched the search query
 	Hits *[]SearchResultHit `json:"hits,omitempty"`
+
+	// Metadata Custom JSON object that can be returned in the search response
+	Metadata *map[string]interface{} `json:"metadata,omitempty"`
 
 	// OutOf The total number of documents in the collection
 	OutOf *int `json:"out_of,omitempty"`
@@ -1562,49 +1631,6 @@ type SearchResultHit struct {
 	VectorDistance *float32 `json:"vector_distance,omitempty"`
 }
 
-// SearchSynonym defines model for SearchSynonym.
-type SearchSynonym struct {
-	Id *string `json:"id,omitempty"`
-
-	// Locale Locale for the synonym, leave blank to use the standard tokenizer.
-	Locale *string `json:"locale,omitempty"`
-
-	// Root For 1-way synonyms, indicates the root word that words in the `synonyms` parameter map to.
-	Root *string `json:"root,omitempty"`
-
-	// SymbolsToIndex By default, special characters are dropped from synonyms. Use this attribute to specify which special characters should be indexed as is.
-	SymbolsToIndex *[]string `json:"symbols_to_index,omitempty"`
-
-	// Synonyms Array of words that should be considered as synonyms.
-	Synonyms []string `json:"synonyms"`
-}
-
-// SearchSynonymDeleteResponse defines model for SearchSynonymDeleteResponse.
-type SearchSynonymDeleteResponse struct {
-	// Id The id of the synonym that was deleted
-	Id string `json:"id"`
-}
-
-// SearchSynonymSchema defines model for SearchSynonymSchema.
-type SearchSynonymSchema struct {
-	// Locale Locale for the synonym, leave blank to use the standard tokenizer.
-	Locale *string `json:"locale,omitempty"`
-
-	// Root For 1-way synonyms, indicates the root word that words in the `synonyms` parameter map to.
-	Root *string `json:"root,omitempty"`
-
-	// SymbolsToIndex By default, special characters are dropped from synonyms. Use this attribute to specify which special characters should be indexed as is.
-	SymbolsToIndex *[]string `json:"symbols_to_index,omitempty"`
-
-	// Synonyms Array of words that should be considered as synonyms.
-	Synonyms []string `json:"synonyms"`
-}
-
-// SearchSynonymsResponse defines model for SearchSynonymsResponse.
-type SearchSynonymsResponse struct {
-	Synonyms []*SearchSynonym `json:"synonyms"`
-}
-
 // StemmingDictionary defines model for StemmingDictionary.
 type StemmingDictionary struct {
 	// Id Unique identifier for the dictionary
@@ -1648,10 +1674,77 @@ type SuccessStatus struct {
 	Success bool `json:"success"`
 }
 
+// SynonymItemSchema defines model for SynonymItemSchema.
+type SynonymItemSchema struct {
+	// Id Unique identifier for the synonym item
+	Id string `json:"id"`
+
+	// Locale Locale for the synonym, leave blank to use the standard tokenizer
+	Locale *string `json:"locale,omitempty"`
+
+	// Root For 1-way synonyms, indicates the root word that words in the synonyms parameter map to
+	Root *string `json:"root,omitempty"`
+
+	// SymbolsToIndex By default, special characters are dropped from synonyms. Use this attribute to specify which special characters should be indexed as is
+	SymbolsToIndex *[]string `json:"symbols_to_index,omitempty"`
+
+	// Synonyms Array of words that should be considered as synonyms
+	Synonyms []string `json:"synonyms"`
+}
+
+// SynonymSetCreateSchema defines model for SynonymSetCreateSchema.
+type SynonymSetCreateSchema struct {
+	// Items Array of synonym items
+	Items []SynonymItemSchema `json:"items"`
+}
+
+// SynonymSetDeleteSchema defines model for SynonymSetDeleteSchema.
+type SynonymSetDeleteSchema struct {
+	// Name Name of the deleted synonym set
+	Name string `json:"name"`
+}
+
+// SynonymSetRetrieveSchema defines model for SynonymSetRetrieveSchema.
+type SynonymSetRetrieveSchema = SynonymSetCreateSchema
+
+// SynonymSetSchema defines model for SynonymSetSchema.
+type SynonymSetSchema struct {
+	// Items Array of synonym items
+	Items []SynonymItemSchema `json:"items"`
+
+	// Name Name of the synonym set
+	Name string `json:"name"`
+}
+
 // VoiceQueryModelCollectionConfig Configuration for the voice query model
 type VoiceQueryModelCollectionConfig struct {
 	ModelName *string `json:"model_name,omitempty"`
 }
+
+// GetAnalyticsEventsParams defines parameters for GetAnalyticsEvents.
+type GetAnalyticsEventsParams struct {
+	UserId string `form:"user_id" json:"user_id"`
+
+	// Name Analytics rule name
+	Name string `form:"name" json:"name"`
+
+	// N Number of events to return (max 1000)
+	N int `form:"n" json:"n"`
+}
+
+// RetrieveAnalyticsRulesParams defines parameters for RetrieveAnalyticsRules.
+type RetrieveAnalyticsRulesParams struct {
+	// RuleTag Filter rules by rule_tag
+	RuleTag *string `form:"rule_tag,omitempty" json:"rule_tag,omitempty"`
+}
+
+// CreateAnalyticsRuleJSONBody defines parameters for CreateAnalyticsRule.
+type CreateAnalyticsRuleJSONBody struct {
+	union json.RawMessage
+}
+
+// CreateAnalyticsRuleJSONBody1 defines parameters for CreateAnalyticsRule.
+type CreateAnalyticsRuleJSONBody1 = []AnalyticsRuleCreate
 
 // GetCollectionsParams defines parameters for GetCollections.
 type GetCollectionsParams struct {
@@ -1713,6 +1806,7 @@ type SearchCollectionParams struct {
 	ConversationModelId                *string         `form:"conversation_model_id,omitempty" json:"conversation_model_id,omitempty"`
 	DropTokensMode                     *DropTokensMode `form:"drop_tokens_mode,omitempty" json:"drop_tokens_mode,omitempty"`
 	DropTokensThreshold                *int            `form:"drop_tokens_threshold,omitempty" json:"drop_tokens_threshold,omitempty"`
+	EnableAnalytics                    *bool           `form:"enable_analytics,omitempty" json:"enable_analytics,omitempty"`
 	EnableHighlightV1                  *bool           `form:"enable_highlight_v1,omitempty" json:"enable_highlight_v1,omitempty"`
 	EnableOverrides                    *bool           `form:"enable_overrides,omitempty" json:"enable_overrides,omitempty"`
 	EnableSynonyms                     *bool           `form:"enable_synonyms,omitempty" json:"enable_synonyms,omitempty"`
@@ -1771,6 +1865,7 @@ type SearchCollectionParams struct {
 	Stopwords                          *string         `form:"stopwords,omitempty" json:"stopwords,omitempty"`
 	SynonymNumTypos                    *int            `form:"synonym_num_typos,omitempty" json:"synonym_num_typos,omitempty"`
 	SynonymPrefix                      *bool           `form:"synonym_prefix,omitempty" json:"synonym_prefix,omitempty"`
+	SynonymSets                        *string         `form:"synonym_sets,omitempty" json:"synonym_sets,omitempty"`
 	TextMatchType                      *string         `form:"text_match_type,omitempty" json:"text_match_type,omitempty"`
 	TypoTokensThreshold                *int            `form:"typo_tokens_threshold,omitempty" json:"typo_tokens_threshold,omitempty"`
 	UseCache                           *bool           `form:"use_cache,omitempty" json:"use_cache,omitempty"`
@@ -1787,6 +1882,11 @@ type UpdateDocumentParams struct {
 	DirtyValues *DirtyValues `form:"dirty_values,omitempty" json:"dirty_values,omitempty"`
 }
 
+// ToggleSlowRequestLogJSONBody defines parameters for ToggleSlowRequestLog.
+type ToggleSlowRequestLogJSONBody struct {
+	LogSlowRequestsTimeMs int `json:"log-slow-requests-time-ms"`
+}
+
 // MultiSearchParams defines parameters for MultiSearch.
 type MultiSearchParams struct {
 	CacheTtl                           *int            `form:"cache_ttl,omitempty" json:"cache_ttl,omitempty"`
@@ -1795,6 +1895,7 @@ type MultiSearchParams struct {
 	ConversationModelId                *string         `form:"conversation_model_id,omitempty" json:"conversation_model_id,omitempty"`
 	DropTokensMode                     *DropTokensMode `form:"drop_tokens_mode,omitempty" json:"drop_tokens_mode,omitempty"`
 	DropTokensThreshold                *int            `form:"drop_tokens_threshold,omitempty" json:"drop_tokens_threshold,omitempty"`
+	EnableAnalytics                    *bool           `form:"enable_analytics,omitempty" json:"enable_analytics,omitempty"`
 	EnableHighlightV1                  *bool           `form:"enable_highlight_v1,omitempty" json:"enable_highlight_v1,omitempty"`
 	EnableOverrides                    *bool           `form:"enable_overrides,omitempty" json:"enable_overrides,omitempty"`
 	EnableSynonyms                     *bool           `form:"enable_synonyms,omitempty" json:"enable_synonyms,omitempty"`
@@ -1853,6 +1954,7 @@ type MultiSearchParams struct {
 	Stopwords                          *string         `form:"stopwords,omitempty" json:"stopwords,omitempty"`
 	SynonymNumTypos                    *int            `form:"synonym_num_typos,omitempty" json:"synonym_num_typos,omitempty"`
 	SynonymPrefix                      *bool           `form:"synonym_prefix,omitempty" json:"synonym_prefix,omitempty"`
+	SynonymSets                        *string         `form:"synonym_sets,omitempty" json:"synonym_sets,omitempty"`
 	TextMatchType                      *string         `form:"text_match_type,omitempty" json:"text_match_type,omitempty"`
 	TypoTokensThreshold                *int            `form:"typo_tokens_threshold,omitempty" json:"typo_tokens_threshold,omitempty"`
 	UseCache                           *bool           `form:"use_cache,omitempty" json:"use_cache,omitempty"`
@@ -1879,13 +1981,13 @@ type ImportStemmingDictionaryParams struct {
 type UpsertAliasJSONRequestBody = CollectionAliasSchema
 
 // CreateAnalyticsEventJSONRequestBody defines body for CreateAnalyticsEvent for application/json ContentType.
-type CreateAnalyticsEventJSONRequestBody = AnalyticsEventCreateSchema
+type CreateAnalyticsEventJSONRequestBody = AnalyticsEvent
 
 // CreateAnalyticsRuleJSONRequestBody defines body for CreateAnalyticsRule for application/json ContentType.
-type CreateAnalyticsRuleJSONRequestBody = AnalyticsRuleSchema
+type CreateAnalyticsRuleJSONRequestBody CreateAnalyticsRuleJSONBody
 
 // UpsertAnalyticsRuleJSONRequestBody defines body for UpsertAnalyticsRule for application/json ContentType.
-type UpsertAnalyticsRuleJSONRequestBody = AnalyticsRuleUpsertSchema
+type UpsertAnalyticsRuleJSONRequestBody = AnalyticsRuleUpdate
 
 // CreateCollectionJSONRequestBody defines body for CreateCollection for application/json ContentType.
 type CreateCollectionJSONRequestBody = CollectionSchema
@@ -1905,8 +2007,8 @@ type UpdateDocumentJSONRequestBody = UpdateDocumentJSONBody
 // UpsertSearchOverrideJSONRequestBody defines body for UpsertSearchOverride for application/json ContentType.
 type UpsertSearchOverrideJSONRequestBody = SearchOverrideSchema
 
-// UpsertSearchSynonymJSONRequestBody defines body for UpsertSearchSynonym for application/json ContentType.
-type UpsertSearchSynonymJSONRequestBody = SearchSynonymSchema
+// ToggleSlowRequestLogJSONRequestBody defines body for ToggleSlowRequestLog for application/json ContentType.
+type ToggleSlowRequestLogJSONRequestBody ToggleSlowRequestLogJSONBody
 
 // CreateConversationModelJSONRequestBody defines body for CreateConversationModel for application/json ContentType.
 type CreateConversationModelJSONRequestBody = ConversationModelCreateSchema
@@ -1934,6 +2036,9 @@ type ImportStemmingDictionaryJSONRequestBody = ImportStemmingDictionaryJSONBody
 
 // UpsertStopwordsSetJSONRequestBody defines body for UpsertStopwordsSet for application/json ContentType.
 type UpsertStopwordsSetJSONRequestBody = StopwordsSetUpsertSchema
+
+// UpsertSynonymSetJSONRequestBody defines body for UpsertSynonymSet for application/json ContentType.
+type UpsertSynonymSetJSONRequestBody = SynonymSetCreateSchema
 
 // AsSearchParameters returns the union data inside the PresetSchema_Value as a SearchParameters
 func (t PresetSchema_Value) AsSearchParameters() (SearchParameters, error) {
