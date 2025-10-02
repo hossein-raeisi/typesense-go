@@ -3098,6 +3098,22 @@ func NewSearchCollectionRequest(server string, collectionName string, params *Se
 
 		}
 
+		if params.NlQueryPromptCacheTtl != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "nl_query_prompt_cache_ttl", runtime.ParamLocationQuery, *params.NlQueryPromptCacheTtl); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
 		if params.NumTypos != nil {
 
 			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "num_typos", runtime.ParamLocationQuery, *params.NumTypos); err != nil {
@@ -5129,6 +5145,22 @@ func NewMultiSearchRequestWithBody(server string, params *MultiSearchParams, con
 		if params.NlQuery != nil {
 
 			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "nl_query", runtime.ParamLocationQuery, *params.NlQuery); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.NlQueryPromptCacheTtl != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "nl_query_prompt_cache_ttl", runtime.ParamLocationQuery, *params.NlQueryPromptCacheTtl); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 				return nil, err
@@ -10328,7 +10360,7 @@ func ParseCreateNLSearchModelResponse(rsp *http.Response) (*CreateNLSearchModelR
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && (rsp.StatusCode == 200 || rsp.StatusCode == 201):
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest NLSearchModelSchema
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err

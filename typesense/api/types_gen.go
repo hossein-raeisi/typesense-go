@@ -1387,6 +1387,9 @@ type SearchParameters struct {
 	// NlQuery Whether to use natural language processing to parse the query.
 	NlQuery *bool `json:"nl_query,omitempty"`
 
+	// NlQueryPromptCacheTtl TTL of cache of schema prompt generation in seconds.
+	NlQueryPromptCacheTtl *int `json:"nl_query_prompt_cache_ttl,omitempty"`
+
 	// NumTypos The number of typographical errors (1 or 2) that would be tolerated. Default: 2
 	NumTypos *string `json:"num_typos,omitempty"`
 
@@ -1747,6 +1750,7 @@ type SearchCollectionParams struct {
 	MinLen2typo                        *int            `form:"min_len_2typo,omitempty" json:"min_len_2typo,omitempty"`
 	NlModelId                          *string         `form:"nl_model_id,omitempty" json:"nl_model_id,omitempty"`
 	NlQuery                            *bool           `form:"nl_query,omitempty" json:"nl_query,omitempty"`
+	NlQueryPromptCacheTtl              *int            `form:"nl_query_prompt_cache_ttl,omitempty" json:"nl_query_prompt_cache_ttl,omitempty"`
 	NumTypos                           *string         `form:"num_typos,omitempty" json:"num_typos,omitempty"`
 	Offset                             *int            `form:"offset,omitempty" json:"offset,omitempty"`
 	OverrideTags                       *string         `form:"override_tags,omitempty" json:"override_tags,omitempty"`
@@ -1829,6 +1833,7 @@ type MultiSearchParams struct {
 	MinLen2typo                        *int            `form:"min_len_2typo,omitempty" json:"min_len_2typo,omitempty"`
 	NlModelId                          *string         `form:"nl_model_id,omitempty" json:"nl_model_id,omitempty"`
 	NlQuery                            *bool           `form:"nl_query,omitempty" json:"nl_query,omitempty"`
+	NlQueryPromptCacheTtl              *int            `form:"nl_query_prompt_cache_ttl,omitempty" json:"nl_query_prompt_cache_ttl,omitempty"`
 	NumTypos                           *string         `form:"num_typos,omitempty" json:"num_typos,omitempty"`
 	Offset                             *int            `form:"offset,omitempty" json:"offset,omitempty"`
 	OverrideTags                       *string         `form:"override_tags,omitempty" json:"override_tags,omitempty"`

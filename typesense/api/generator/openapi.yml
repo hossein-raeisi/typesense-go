@@ -2822,6 +2822,10 @@ components:
           description: The ID of the natural language model to use.
           type: string
 
+        nl_query_prompt_cache_ttl:
+          description: TTL of cache of schema prompt generation in seconds.
+          type: integer
+
         query_by_weights:
           description:
             The relative weight to give each `query_by` field when ranking results.

@@ -1344,6 +1344,9 @@ components:
         nl_query:
           description: Whether to use natural language processing to parse the query.
           type: boolean
+        nl_query_prompt_cache_ttl:
+          description: TTL of cache of schema prompt generation in seconds.
+          type: integer
         num_typos:
           description: |
             The number of typographical errors (1 or 2) that would be tolerated. Default: 2
@@ -2716,6 +2719,10 @@ paths:
           schema:
             type: boolean
         - in: query
+          name: nl_query_prompt_cache_ttl
+          schema:
+            type: integer
+        - in: query
           name: num_typos
           schema:
             type: string
@@ -3526,6 +3533,10 @@ paths:
           name: nl_query
           schema:
             type: boolean
+        - in: query
+          name: nl_query_prompt_cache_ttl
+          schema:
+            type: integer
         - in: query
           name: num_typos
           schema:
